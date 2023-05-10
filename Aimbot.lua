@@ -1,4 +1,4 @@
--- tracking aimbot script by YellowGreg and Mmsvon
+-- tracking aimbot script made by YellowGreg and Mmsvon
 -- https://github.com/YellowGreg/
 -- https://github.com/StevenK-293/
 
