@@ -1,8 +1,11 @@
 -- Universal Silent Aim Script
 -- Modify By YellowGreg, Wspboy12
 
--- Note: We were dumb because we tried to modify to have a hitchance but that was not universal for all game, so we just modify the script to be universal all fps game and so it can be functional with no error.
-
+--[[ 
+Note: We were dumb because we tried to modify this script to have a hitchance,
+but that was not universal for all game but for arsenal, 
+so we just modify the script to be universal for some fps game and so it can be functional with no error.
+]]--
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local mouse = LocalPlayer:GetMouse()
