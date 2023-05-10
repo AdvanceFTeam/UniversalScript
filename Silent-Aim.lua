@@ -8,7 +8,6 @@ TODO:
 - Add TeamCheck
 - Add Visible Check
 - Add Target Part
-- Add Silent Aim Method
 - Add Target Prediction
 - Add Visual ESP
 - Need to Fix FOV Circle
