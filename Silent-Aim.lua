@@ -15,6 +15,7 @@ Add option to customize target part (e.g. head, torso, etc.)
 Add option to customize hitchance for specific games
 Add option to customize aim smoothing
 Add option to enable/disable aimbot in specific games
+
 --// Visual ESP
 
 Add box ESP for targets
@@ -22,12 +23,14 @@ Add name ESP for targets
 Add distance ESP for targets
 Add option to customize ESP color and opacity
 Add option to customize ESP size and thickness
+
 --// Target Prediction
 
 Add velocity prediction for moving targets
 Add acceleration prediction for targets using vehicles
 Add jump prediction for targets jumping or falling
 Add option to customize prediction accuracy
+
 --// Anti-Aim
 
 Add option to enable/disable anti-aim
