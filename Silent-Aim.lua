@@ -8,9 +8,6 @@ so we just modify the script to be universal for some fps game and so it can be 
 ]]--
 
 
--- Universal Silent Aim Script
--- Modify By YellowGreg, Wspboy12
-
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local mouse = LocalPlayer:GetMouse()
