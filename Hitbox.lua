@@ -3,7 +3,7 @@
 
 local settings = {
     HeadSize = 20,
-    Transparency = 0.7,
+    Transparency = 0.5,
     BrickColor = BrickColor.new("Really blue"),
     Material = Enum.Material.Neon,
     CanCollide = false,
