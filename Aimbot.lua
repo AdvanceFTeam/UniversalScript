@@ -1,27 +1,29 @@
--- tracking aimbot script made by YellowGreg and Mmsvon
+-- tracking aimbot script made by YellowGreg and MMSVon
 -- https://github.com/YellowGreg/
 -- https://github.com/StevenK-293/
+
+
 
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 local Camera = game.Workspace.CurrentCamera
 
--- Change these settings to your liking
+-- Change these settings to your liking -- YellowGreg did thus
 local FOV = 30
 local Smoothness = 10
 local TeamCheck = true
 
--- Modify these colors to your liking
+-- Modify these colors to your liking -- YellowGreg did this
 local FriendlyColor = Color3.fromRGB(0, 255, 0) -- Green
 local EnemyColor = Color3.fromRGB(255, 0, 0) -- Red
 
--- Checks if a player is on the same team as the local player
+-- Checks if a player is on the same team as the local player -- YellowGreg did this
 local function isTeammate(player)
     return TeamCheck and player.TeamColor == LocalPlayer.TeamColor
 end
 
--- Returns the closest player to the crosshair within the specified FOV
+-- Returns the closest player to the crosshair within the specified FOV -- YellowGreg did this
 local function getClosestPlayer()
     local closestPlayer = nil
     local closestDistance = math.huge
@@ -39,7 +41,7 @@ local function getClosestPlayer()
     return closestPlayer
 end
 
--- Draws a box around the player's head to indicate target
+-- Draws a box around the player's head to indicate target -- Both MMSVon and YellowGreg did this
 local function drawBox(player)
     local character = player.Character
     if character and character:FindFirstChild("Head") then
@@ -65,7 +67,7 @@ local function drawBox(player)
     end
 end
 
--- Aimbot loop
+-- Aimbot loop -- MMSVon did this
 while true do
     local target = getClosestPlayer()
     if target then
