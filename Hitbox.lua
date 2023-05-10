@@ -1,3 +1,6 @@
+-- Universal Hitbox
+-- Modify by YellowGreg, Wspboy12
+
 local settings = {
     HeadSize = 20,
     Transparency = 0.7,
