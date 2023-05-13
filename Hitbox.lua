@@ -3,34 +3,33 @@
 
 local settings = {
     HeadSize = 20,
-    Transparency = 0.5,
-    BrickColor = BrickColor.new("Really blue"),
-    Material = Enum.Material.Neon,
+    HeadColor = Color3.new(0, 1, 0),
+    HeadTransparency = 0.5,
+    BodySize = Vector3.new(2, 3, 1),
+    BodyColor = Color3.new(0, 0, 1),
+    BodyTransparency = 0.5,
     CanCollide = false,
     -- add more settings here if desired
 }
 
-local teamCheck = true -- set to true to only modify non-teammates
-local friendlyColor = BrickColor.new("Bright green")
-local enemyColor = BrickColor.new("Really red")
-
 local players = game:GetService("Players")
 local localPlayer = players.LocalPlayer
-local localTeam = localPlayer.Team
 
 local function modifyHead(head)
     if head and head:IsA("BasePart") then
-        local color = settings.BrickColor
-        if teamCheck and head.Parent.Team == localTeam then
-            color = friendlyColor
-        elseif teamCheck then
-            color = enemyColor
-        end
-        head.Transparency = settings.Transparency
-        head.CanCollide = settings.CanCollide
-        head.BrickColor = color
-        head.Material = settings.Material
         head.Size = Vector3.new(settings.HeadSize, settings.HeadSize, settings.HeadSize)
+        head.Color = settings.HeadColor
+        head.Transparency = settings.HeadTransparency
+        head.CanCollide = settings.CanCollide
+    end
+end
+
+local function modifyBody(body)
+    if body and body:IsA("BasePart") then
+        body.Size = settings.BodySize
+        body.Color = settings.BodyColor
+        body.Transparency = settings.BodyTransparency
+        body.CanCollide = settings.CanCollide
     end
 end
 
@@ -38,16 +37,20 @@ for _, player in ipairs(players:GetPlayers()) do
     if player ~= localPlayer then
         local character = player.Character
         if character then
-            local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
-            modifyHead(humanoidRootPart and humanoidRootPart.Head)
+            for _, part in ipairs(character:GetDescendants()) do
+                if part.Name == "Head" then
+                    modifyHead(part)
+                elseif part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
+                    modifyBody(part)
+                end
+            end
+
             character.ChildAdded:Connect(function(child)
                 if child.Name == "Head" then
                     modifyHead(child)
+                elseif child:IsA("BasePart") and child.Name ~= "HumanoidRootPart" then
+                    modifyBody(child)
                 end
-            end)
-            character:GetPropertyChangedSignal("Team"):Connect(function()
-                localTeam = localPlayer.Team
-                modifyHead(humanoidRootPart and humanoidRootPart.Head)
             end)
         end
     end
