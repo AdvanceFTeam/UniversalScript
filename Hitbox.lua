@@ -1,5 +1,5 @@
 -- Universal Hitbox
--- Modify by YellowGreg, Wspboy12
+-- Created by YellowGreg, Wspboy12
 
 local settings = {
     HeadSize = 20,
