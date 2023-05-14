@@ -1,84 +1,94 @@
--- Universal Silent Aim Script
--- Created By YellowGreg, Wspboy12
+-- Silent Aim script Modify by YellowGreg, MMSVon, and ShadowClark
+-- Created GetNearestEnemy() function to find the nearest enemy to aim at
+-- Modified the Namecall function to update the Ray argument with the target position when using Silent Aim
+-- Added a feature to limit the field of view (FOV) to avoid targeting enemies outside a certain range
+-- Added a RenderStep to update the target position and implement the Silent Aim functionality
+
 
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
-local mouse = LocalPlayer:GetMouse()
+local Mouse = LocalPlayer:GetMouse()
 local Camera = workspace.CurrentCamera
-local Debris = game:GetService("Debris")
 local UserInputService = game:GetService("UserInputService")
-local target = nil
 local RunService = game:GetService("RunService")
 
-local fov = 100 -- The FOV radius
-local circle = Drawing.new("Circle") -- The circle object for drawing the FOV
-circle.Position = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2) -- Centered position of the circle
-circle.Thickness = 1 -- The thickness of the circle
-circle.Radius = fov -- The radius of the circle
-circle.Color = Color3.fromRGB(255, 255, 255) -- The color of the circle
-
-local features = {
-  silentaim = true
+local Features = {
+  SilentAim = true;
+  Fov = 500;
 }
 
-function getNearestEnemy()
-  local nearestMagnitude = math.huge
-  local nearestEnemy = nil
-  for i, enemy in ipairs(Players:GetPlayers()) do
-    if enemy ~= LocalPlayer and enemy.Character and enemy.Character:FindFirstChild("HumanoidRootPart") and
-        enemy.Character:FindFirstChild("Humanoid") and enemy.Character.Humanoid.Health > 0 then
-      local vector, onScreen = Camera:WorldToScreenPoint(enemy.Character.HumanoidRootPart.Position)
-      if onScreen then
-        local ray = Ray.new(Camera.CFrame.Position, (enemy.Character.Head.Position - Camera.CFrame.Position).unit * 500)
-        local hitPart, hitPosition, hitNormal = workspace:FindPartOnRayWithIgnoreList(ray, { LocalPlayer.Character })
-
-        if hitPart and hitPart:IsDescendantOf(enemy.Character) then
-          local magnitude = (Vector2.new(mouse.X, mouse.Y) - Vector2.new(vector.X, vector.Y)).magnitude
-          if magnitude < nearestMagnitude and magnitude <= fov then
-            nearestEnemy = enemy
-            nearestMagnitude = magnitude
+local function GetNearestEnemy()
+  local NearestMagnitude = math.huge
+  local NearestEnemy = nil
+  for _, Player in ipairs(Players:GetPlayers()) do
+    if Player ~= LocalPlayer and Player.Character and Player.Character:FindFirstChild("HumanoidRootPart") and
+        Player.Character:FindFirstChild("Humanoid") and Player.Character.Humanoid.Health > 0 then
+      local Vector, OnScreen = Camera:WorldToScreenPoint(Player.Character.HumanoidRootPart.Position)
+      if OnScreen then
+        local Ray = Ray.new(Camera.CFrame.p, (Player.Character.Head.Position - Camera.CFrame.p).unit * 500)
+        local IgnoreList = {
+          LocalPlayer.Character;
+        }
+        local Hit, Position, Normal = workspace:FindPartOnRayWithIgnoreList(Ray, IgnoreList)
+        if Hit and Hit:IsDescendantOf(Player.Character) and Hit:FindFirstAncestorOfClass("Model") and
+            Players:FindFirstChild(Hit:FindFirstAncestorOfClass("Model").Name) then
+          local Magnitude = (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(Vector.X, Vector.Y)).magnitude
+          if Magnitude < NearestMagnitude and Magnitude <= Features.Fov then
+            NearestEnemy = Player
+            NearestMagnitude = Magnitude
           end
         end
       end
     end
   end
-  return nearestEnemy
+  return NearestEnemy
 end
 
-local meta = getrawmetatable(game)
-setreadonly(meta, false)
-local oldNamecall = meta.__namecall
-meta.__namecall = newcclosure(function(...)
-  local method = getnamecallmethod()
-  local args = { ... }
-  if string.find(method, 'Ray') and target then
-    args[2] = Ray.new(Camera.CFrame.Position, (target.Position - Camera.CFrame.Position).unit * 500)
+local function Namecall(...)
+  local Method = getnamecallmethod()
+  local Args = { ... }
+  if string.find(Method, "Ray") and Features.SilentAim and target then
+    Args[2] = Ray.new(Camera.CFrame.Position,
+      (target + Vector3.new(0, (Camera.CFrame.Position - target).Magnitude / 500, 0) - Camera.CFrame.Position).unit * 500)
   end
-  return oldNamecall(unpack(args))
-end)
-setreadonly(meta, true)
+  return oldNamecall(unpack(Args))
+end
 
-RunService:BindToRenderStep("silentaim", 1, function()
-  circle.Visible = features.silentaim -- Show or hide the FOV circle based on the value of 'features.silentaim'
+local Meta = getrawmetatable(game)
+setreadonly(Meta, false)
+local OldNamecall = Meta.__namecall
+Meta.__namecall = newcclosure(Namecall)
 
-  if UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) and features.silentaim and
+local Target = nil
+
+RunService:BindToRenderStep("SilentAim", 1, function()
+  if UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) and Features.SilentAim and
       LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") and
       LocalPlayer.Character.Humanoid.Health > 0 then
-    local nearestEnemy = getNearestEnemy()
-    if nearestEnemy and nearestEnemy.Character and nearestEnemy.Character:FindFirstChild("Humanoid") and
-        nearestEnemy.Character.Humanoid.Health > 0 then
-      local vector, onScreen = Camera:WorldToScreenPoint(nearestEnemy.Character.Head.Position)
-      local magnitude = (Vector2.new(mouse.X, mouse.Y) - Vector2.new(vector.X, vector
-        .Y)).magnitude
-      if magnitude <= features.fov then
-        target = workspace[nearestEnemy.Name].Head
-      else
-        target = nil
-      end
-    else
-      target = nil
+    local Enemy = GetNearestEnemy()
+    if Enemy and Enemy.Character and Enemy.Character:FindFirstChild("Humanoid") and Enemy.Character.Humanoid.Health > 0 then
+      local Vector, OnScreen = Camera:WorldToScreenPoint(Enemy.Character.Head.Position)
+      local Magnitude = (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(Vector.X, Vector.Y)).magnitude
+      target = workspace[Enemy.Name]["Head"].Position
     end
   else
     target = nil
   end
+end)
+
+local Meta = getrawmetatable(game)
+setreadonly(Meta, false)
+local OldNameCall = Meta.__namecall
+Meta.__namecall = newcclosure(function(...)
+  local Method = getnamecallmethod()
+  local Args = { ... }
+  if string.find(Method, 'Ray') then
+    if target then
+      Args[2] = Ray.new(workspace.CurrentCamera.CFrame.Position,
+        (
+        target + Vector3.new(0, (workspace.CurrentCamera.CFrame.Position - target).Magnitude / 500, 0) -
+            workspace.CurrentCamera.CFrame.Position).unit * 500)
+    end
+  end
+  return OldNameCall(unpack(Args))
 end)
