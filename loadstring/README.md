@@ -1,5 +1,5 @@
 ## Loadstring
-- Silent Aim
+- **Silent Aim**
 ```lua
 local settings = {
     fov = 100, -- The FOV radius
@@ -12,7 +12,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/AdvanceFTeam/Universa
 silentaim = settings.aimbotEnabled
 fov = settings.fov
 ```
-- Aimbot
+- **Aimbot**
 ```lua
 local AIMBOT_ENABLED = true
 local TEAM_CHECK = false -- If set to true then the script would only lock your aim at enemy team members.
