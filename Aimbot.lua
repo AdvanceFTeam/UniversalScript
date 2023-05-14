@@ -1,6 +1,11 @@
 -- Universal Aimbot Script That Works for PC and Mobile
 --// Made by Advancefalling Team
 
+-- Update: Improve the support mobile touch inputs
+
+
+
+
 --[[ 
 Credit:
 - YellowGreg (code optimization and refactoring), 
@@ -46,18 +51,24 @@ end
 
 -- Event connections
 UserInputService.InputBegan:Connect(function(input, processed)
+    -- If the user taps the screen with a finger, or clicks the right mouse button,
+    -- set the 'touching' variable to true.
     if not processed and (input.UserInputType == Enum.UserInputType.MouseButton2 or input.UserInputType == Enum.UserInputType.Touch) then
         touching = true
     end
 end)
 
 UserInputService.InputEnded:Connect(function(input, processed)
+    -- If the user lifts their finger off the screen, or releases the right mouse button,
+    -- set the 'touching' variable to false.
     if not processed and (input.UserInputType == Enum.UserInputType.MouseButton2 or input.UserInputType == Enum.UserInputType.Touch) then
         touching = false
     end
 end)
 
 game:GetService("RunService").RenderStepped:Connect(function()
+    -- If the user is touching the screen (or holding down the right mouse button)
+    -- and the aimbot is enabled, attempt to lock onto the closest player.
     if touching and AIMBOT_ENABLED then
         local target = getClosestPlayer()
         
