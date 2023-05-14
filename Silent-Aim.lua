@@ -4,7 +4,6 @@
 -- Added a feature to limit the field of view (FOV) to avoid targeting enemies outside a certain range
 -- Added a RenderStep to update the target position and implement the Silent Aim functionality
 
-
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
@@ -16,6 +15,8 @@ local Features = {
   SilentAim = true;
   Fov = 500;
 }
+
+local target = nil
 
 local function GetNearestEnemy()
   local NearestMagnitude = math.huge
@@ -51,15 +52,13 @@ local function Namecall(...)
     Args[2] = Ray.new(Camera.CFrame.Position,
       (target + Vector3.new(0, (Camera.CFrame.Position - target).Magnitude / 500, 0) - Camera.CFrame.Position).unit * 500)
   end
-  return oldNamecall(unpack(Args))
+  return OldNamecall(unpack(Args))
 end
 
 local Meta = getrawmetatable(game)
 setreadonly(Meta, false)
 local OldNamecall = Meta.__namecall
 Meta.__namecall = newcclosure(Namecall)
-
-local Target = nil
 
 RunService:BindToRenderStep("SilentAim", 1, function()
   if UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) and Features.SilentAim and
@@ -76,8 +75,6 @@ RunService:BindToRenderStep("SilentAim", 1, function()
   end
 end)
 
-local Meta = getrawmetatable(game)
-setreadonly(Meta, false)
 local OldNameCall = Meta.__namecall
 Meta.__namecall = newcclosure(function(...)
   local Method = getnamecallmethod()
