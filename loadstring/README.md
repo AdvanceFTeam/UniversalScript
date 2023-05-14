@@ -1,17 +1,4 @@
 ## Loadstring
-- **Silent Aim**
-```lua
-local settings = {
-    fov = 100, -- The FOV radius
-    aimbotEnabled = true,
-}
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/AdvanceFTeam/UniversalScript/main/Silent-Aim.lua", true))()
-
--- Change the settings below
-silentaim = settings.aimbotEnabled
-fov = settings.fov
-```
 - **Aimbot**
 ```lua
 local AIMBOT_ENABLED = true
