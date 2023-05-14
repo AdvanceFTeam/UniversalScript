@@ -68,7 +68,22 @@ RunService:BindToRenderStep("SilentAim", 1, function()
     if Enemy and Enemy.Character and Enemy.Character:FindFirstChild("Humanoid") and Enemy.Character.Humanoid.Health > 0 then
       local Vector, OnScreen = Camera:WorldToScreenPoint(Enemy.Character.Head.Position)
       local Magnitude = (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(Vector.X, Vector.Y)).magnitude
-      target = workspace[Enemy.Name]["Head"].Position
+      if Magnitude <= Features.Fov then
+        target = workspace[Enemy.Name]["Head"].Position
+        if Features.ShowFOV then
+          local FOV = Drawing.new("Circle")
+          FOV.Position = Vector2.new(Vector.X, Vector.Y)
+          FOV.Radius = Features.Fov
+          FOV.Thickness = 2
+          FOV.NumSides = 32
+          FOV.Color = Color3.fromRGB(255, 255, 255)
+          FOV.Transparency = 1
+          FOV.Filled = false
+          FOV.Visible = true
+          FOV.Parent = Drawing
+          table.insert(DrawingObjects, FOV)
+        end
+      end
     end
   else
     target = nil
