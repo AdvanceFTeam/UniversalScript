@@ -33,14 +33,14 @@ local function modifyBody(body)
     end
 end
 
-for _, player in ipairs(players:GetPlayers()) do
-    if player ~= localPlayer then
-        local character = player.Character
-        if character then
+local function modifyCharacter(character)
+    if character then
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+        if humanoidRootPart then
             for _, part in ipairs(character:GetDescendants()) do
                 if part.Name == "Head" then
                     modifyHead(part)
-                elseif part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
+                elseif part:IsA("BasePart") and part ~= humanoidRootPart then
                     modifyBody(part)
                 end
             end
@@ -48,10 +48,31 @@ for _, player in ipairs(players:GetPlayers()) do
             character.ChildAdded:Connect(function(child)
                 if child.Name == "Head" then
                     modifyHead(child)
-                elseif child:IsA("BasePart") and child.Name ~= "HumanoidRootPart" then
+                elseif child:IsA("BasePart") and child ~= humanoidRootPart then
                     modifyBody(child)
                 end
             end)
         end
     end
 end
+
+local function modifyAllPlayers()
+    for _, player in ipairs(players:GetPlayers()) do
+        if player ~= localPlayer then
+            modifyCharacter(player.Character)
+            player.CharacterAdded:Connect(function(character)
+                modifyCharacter(character)
+            end)
+        end
+    end
+end
+
+local function onPlayerAdded(player)
+    player.CharacterAdded:Connect(function(character)
+        modifyCharacter(character)
+    end)
+end
+
+players.PlayerAdded:Connect(onPlayerAdded)
+
+modifyAllPlayers()
