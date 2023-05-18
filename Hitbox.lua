@@ -1,6 +1,8 @@
 -- Universal Hitbox
 -- Created by YellowGreg, Wspboy12, MMSVon
 
+-- IMPORTANT: it will sometimes make the character not move
+
 local settings = {
     HeadSize = 20,
     HeadColor = Color3.new(153, 0, 0),
