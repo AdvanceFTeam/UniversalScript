@@ -1,9 +1,9 @@
 -- Universal Hitbox
--- Created by YellowGreg, Wspboy12
+-- Created by YellowGreg, Wspboy12, MMSVon
 
 local settings = {
     HeadSize = 20,
-    HeadColor = Color3.new(0, 1, 0),
+    HeadColor = Color3.new(153, 0, 0),
     HeadTransparency = 0.5,
     BodySize = Vector3.new(2, 3, 1),
     BodyColor = Color3.new(0, 0, 1),
